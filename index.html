@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Excellence Gateway</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  video{position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+  #hint{position:fixed;left:50%;bottom:6%;transform:translateX(-50%);padding:14px 28px;border-radius:40px;
+    background:rgba(13,43,69,.85);color:#F6F0E7;font:500 22px/1.3 system-ui,sans-serif;border:1px solid #B87B4B;transition:opacity .6s}
+  body.idle{cursor:none} body.idle #hint{opacity:0}
+</style>
+</head>
+<body>
+<video id="v" src="booth.mp4" poster="poster.jpg" autoplay muted loop playsinline preload="auto"></video>
+<div id="hint">اضغط OK للعرض بملء الشاشة · Press OK for full screen</div>
+<script>
+  var v=document.getElementById('v'), b=document.body, t;
+  function play(){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  v.addEventListener('ended',function(){ v.currentTime=0; play(); });
+  v.addEventListener('stalled',play); v.addEventListener('pause',function(){ setTimeout(play,500); });
+  function fs(){ var e=document.documentElement, f=e.requestFullscreen||e.webkitRequestFullscreen||e.msRequestFullscreen;
+    if(f && !document.fullscreenElement && !document.webkitFullscreenElement){ try{ var r=f.call(e); if(r&&r.catch) r.catch(function(){}); }catch(x){} } play(); }
+  document.addEventListener('click',fs); document.addEventListener('keydown',fs);
+  function wake(){ b.classList.remove('idle'); clearTimeout(t); t=setTimeout(function(){ b.classList.add('idle'); },4000); }
+  ['mousemove','keydown','click'].forEach(function(e){ document.addEventListener(e,wake); }); wake(); play();
+</script>
+</body>
+</html>
